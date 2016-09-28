@@ -13,25 +13,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ubidots.ApiClient;
 import com.ubidots.DataSource;
 import com.ubidots.Variable;
 
+import java.util.ArrayList;
+
+import anbora.com.ubidotviewer.adapter.DataSourceAdapter;
+import anbora.com.ubidotviewer.listener.OnClickItemDataSourceListener;
+
 public class MainActivity extends AppCompatActivity {
 
-    private static final String BATTERY_LEVEL = "level";
-    private TextView mBatteryLevel;
-    private BroadcastReceiver mBatteryReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int level = intent.getIntExtra(BATTERY_LEVEL, 0);
-
-            mBatteryLevel.setText(Integer.toString(level) + "%");
-            new ApiUbidots().execute(level);
-        }
-    };
+    private DataSourceAdapter dataSourceAdapter;
+    private ListView listDataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +46,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mBatteryLevel = (TextView) findViewById(R.id.batteryLevel);
+        listDataSource = (ListView) findViewById(R.id.list_view_data_source);
+        dataSourceAdapter = new DataSourceAdapter(this, new ArrayList<DataSource>());
+        listDataSource.setAdapter(dataSourceAdapter);
+
+        listDataSource.setOnItemClickListener(new OnClickItemDataSourceListener(this));
     }
 
     @Override
@@ -62,27 +63,32 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        registerReceiver(mBatteryReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        new ApiUbidots().execute();
     }
 
     @Override
     protected void onStop() {
-        unregisterReceiver(mBatteryReceiver);
         super.onStop();
     }
 
-    public class ApiUbidots extends AsyncTask<Integer, Void, Void> {
-        private final String API_KEY = "032f33eae779fe8ec7e0260d4f5f14c6ad88d3b9";
-        private final String VARIABLE_ID = "57e9f7cd7625426ba33175ff";
+    public class ApiUbidots extends AsyncTask<Integer, Void, DataSource[]> {
+        private final String API_KEY = "945a36d71fde0e6514770b5f27bb0c4f6553086c";
 
         @Override
-        protected Void doInBackground(Integer... params) {
+        protected DataSource[] doInBackground(Integer... params) {
             ApiClient apiClient = new ApiClient(API_KEY);
 
-            Variable batteryLevel = apiClient.getVariable(VARIABLE_ID);
+            return apiClient.getDataSources();
+        }
 
-            batteryLevel.saveValue(params[0]);
-            return null;
+        @Override
+        protected void onPostExecute(DataSource[] dataSources) {
+            if (dataSources != null){
+                dataSourceAdapter.clear();
+                for (DataSource data : dataSources){
+                    dataSourceAdapter.add(data);
+                }
+            }
         }
     }
 
