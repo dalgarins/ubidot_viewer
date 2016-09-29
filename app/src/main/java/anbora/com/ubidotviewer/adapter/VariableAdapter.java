@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.ubidots.Variable;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import anbora.com.ubidotviewer.R;
 

@@ -29,6 +29,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="anbora.com.ubidotviewer.MainActivity" />
         </activity>
+        <activity
+            android:name=".StatActivity"
+            android:label="@string/title_activity_stat"
+            android:parentActivityName=".ListVariableActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="anbora.com.ubidotviewer.ListVariableActivity" />
+        </activity>
     </application>
 
 </manifest>

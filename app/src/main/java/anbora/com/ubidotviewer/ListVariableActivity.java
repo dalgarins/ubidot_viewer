@@ -16,6 +16,7 @@ import com.ubidots.Variable;
 import java.util.ArrayList;
 
 import anbora.com.ubidotviewer.adapter.VariableAdapter;
+import anbora.com.ubidotviewer.listener.OnClickItemVariableListener;
 
 public class ListVariableActivity extends AppCompatActivity {
 
@@ -45,6 +46,8 @@ public class ListVariableActivity extends AppCompatActivity {
         listVariable = (ListView) findViewById(R.id.list_view_variable);
         variableAdapter = new VariableAdapter(this, new ArrayList<Variable>());
         listVariable.setAdapter(variableAdapter);
+
+        listVariable.setOnItemClickListener(new OnClickItemVariableListener(this));
 
     }
 

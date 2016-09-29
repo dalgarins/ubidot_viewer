@@ -17,7 +17,6 @@ import anbora.com.ubidotviewer.R;
 
 public class OnClickItemDataSourceListener implements AdapterView.OnItemClickListener {
 
-    private Intent intent;
     private MainActivity listDataSource;
     private DataSource dataSource;
 
