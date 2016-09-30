@@ -17,21 +17,28 @@ import java.util.ArrayList;
 
 import anbora.com.ubidotviewer.adapter.VariableAdapter;
 import anbora.com.ubidotviewer.listener.OnClickItemVariableListener;
+import icepick.Icepick;
+import icepick.State;
 
 public class ListVariableActivity extends AppCompatActivity {
 
-    private String idDataSource;
+    @State String idDataSource;
     private ListView listVariable;
     private VariableAdapter variableAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Icepick.restoreInstanceState(this, savedInstanceState);
         setContentView(R.layout.activity_list_variable);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        idDataSource = getIntent().getExtras().getString(getString(R.string.key_datasource));
+        if (getIntent() != null && getIntent().getExtras() != null){
+            idDataSource = getIntent().getExtras().getString(getString(R.string.key_datasource));
+        } else {
+            idDataSource = savedInstanceState.getString("data");
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -55,6 +62,13 @@ public class ListVariableActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         new ApiUbidots().execute();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString("data", idDataSource);
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
     }
 
     public class ApiUbidots extends AsyncTask<Integer, Void, Variable[]> {

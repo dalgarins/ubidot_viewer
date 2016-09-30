@@ -24,9 +24,12 @@ import com.ubidots.Variable;
 import java.util.ArrayList;
 import java.util.List;
 
+import icepick.Icepick;
+import icepick.State;
+
 public class StatActivity extends AppCompatActivity {
 
-    private String idVariable;
+    @State String idVariable;
     private LineChart barCharGraphics;
     private List<Entry> entries = new ArrayList<Entry>();
     private ArrayList<String> labels = new ArrayList<String>();
@@ -34,11 +37,16 @@ public class StatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Icepick.restoreInstanceState(this, savedInstanceState);
         setContentView(R.layout.activity_stat);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        idVariable = getIntent().getExtras().getString(getString(R.string.key_variable));
+        if (getIntent() != null && getIntent().getExtras() != null){
+            idVariable = getIntent().getExtras().getString(getString(R.string.key_variable));
+        } else {
+            idVariable = savedInstanceState.getString("variable");
+        }
 
         barCharGraphics = (LineChart) findViewById(R.id.bar_char_graphics);
 
@@ -50,6 +58,13 @@ public class StatActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         new ApiUbidots().execute();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString("variable", idVariable);
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
     }
 
     public class ApiUbidots extends AsyncTask<Integer, Void, Value[]> {
@@ -68,7 +83,7 @@ public class StatActivity extends AppCompatActivity {
                 entries.clear();
                 labels.clear();
 
-                for (int i = 0; i < values.length; i++) {
+                for (int i = values.length-1; i >=0 ; i--) {
                     entries.add(new BarEntry(i, Float.parseFloat(String.valueOf(values[i].getValue()))));
                     labels.add(String.valueOf(values[i].getValue()));
                 }
