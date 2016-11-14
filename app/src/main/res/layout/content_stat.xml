@@ -14,9 +14,28 @@
     tools:showIn="@layout/activity_stat">
 
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/bar_char_graphics"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="33dp"
+        android:layout_marginStart="33dp"
+        android:id="@+id/txtNameVariable"
+        android:textAppearance="@android:style/TextAppearance.Holo.Large"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="86dp" />
 
+    <TextView
+        android:text="Sin Datos!"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/txtNameVariable"
+        android:layout_toRightOf="@+id/txtNameVariable"
+        android:layout_toEndOf="@+id/txtNameVariable"
+        android:layout_marginLeft="79dp"
+        android:layout_marginStart="79dp"
+        android:id="@+id/txtValueVariable"
+        android:textAppearance="@android:style/TextAppearance.Holo.Large" />
 </RelativeLayout>

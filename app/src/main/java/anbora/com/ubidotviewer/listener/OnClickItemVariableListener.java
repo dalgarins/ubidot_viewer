@@ -31,6 +31,7 @@ public class OnClickItemVariableListener implements AdapterView.OnItemClickListe
 
         Intent intent = new Intent(listVariableActivity.getApplicationContext(), StatActivity.class);
         intent.putExtra(listVariableActivity.getString(R.string.key_variable), variable.getId());
+        intent.putExtra(listVariableActivity.getString(R.string.name_variable), variable.getName());
         listVariableActivity.startActivity(intent);
     }
 }

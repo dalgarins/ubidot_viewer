@@ -3,25 +3,19 @@ package anbora.com.ubidotviewer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.ubidots.ApiClient;
 import com.ubidots.Value;
 
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class StatActivity extends AbstractActivity {
 
     String idVariable;
-    private LineChart barCharGraphics;
-    private List<Entry> entries = new ArrayList<Entry>();
-    private ArrayList<String> labels = new ArrayList<String>();
+    String nameVariable;
+    private TextView txtName;
+    private TextView txtValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,15 +25,22 @@ public class StatActivity extends AbstractActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        txtName = (TextView) findViewById(R.id.txtNameVariable);
+        txtValue = (TextView) findViewById(R.id.txtValueVariable);
+
+
+
         if (getIntent() != null && getIntent().getExtras() != null){
             idVariable = getIntent().getExtras().getString(getString(R.string.key_variable));
+            nameVariable = getIntent().getExtras().getString(getString(R.string.name_variable));
             setOnSharedPreferences(getString(R.string.key_variable), idVariable);
+            setOnSharedPreferences(getString(R.string.name_variable), idVariable);
         } else {
             idVariable = getOnSharedPreferences(getString(R.string.key_variable));
+            nameVariable = getIntent().getExtras().getString(getString(R.string.name_variable));
         }
 
-        barCharGraphics = (LineChart) findViewById(R.id.bar_char_graphics);
-
+        txtName.setText(nameVariable);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
@@ -62,18 +63,9 @@ public class StatActivity extends AbstractActivity {
 
         @Override
         protected void onPostExecute(Value[] values) {
-            if (values != null) {
-                entries.clear();
-                labels.clear();
+            if (values != null && values.length > 0) {
 
-                for (int i = 0; i < values.length ; i++) {
-                    entries.add(new BarEntry(Float.parseFloat(String.valueOf(values[i].getValue())), i));
-                    labels.add(String.valueOf(values[i].getValue()));
-                }
-                LineDataSet dataset = new LineDataSet(entries, " ");
-                LineData data = new LineData(dataset);
-                barCharGraphics.setData(data);
-                barCharGraphics.invalidate();
+                txtValue.setText(String.valueOf(values[0].getValue()));
             }
         }
     }
